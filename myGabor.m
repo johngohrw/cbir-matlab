@@ -1,4 +1,4 @@
-function gaborResult = gabor(image, gamma, psi, theta, bw, lambda, pi)
+function gaborResult = myGabor(image, gamma, psi, theta, bw, lambda, pi)
 
     %convert it to gray scale 
     image_gray=rgb2gray(image); 
