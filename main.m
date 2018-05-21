@@ -22,11 +22,11 @@ for ii=1:numberOfFiles
 %   images{ii} = currentimage;  % i dont know what this line is for
     % do stuff here..
     disp(ii)
-    imshow(currentimage);
+    %imshow(currentimage);
 end
 cd ..                           % change dir back to root folder
 
-image1 = imread('image1.jpg');
+image1 = imread('image2_3.jpg');
 % gabor
 gabor1 = myGabor(image1, gamma, psi, theta, bw, lambda, pi);
 gaborMean1 = mean(gabor1);
@@ -45,6 +45,15 @@ hsvhist2 = colourhistogram(image2);
 % disp(hsvhist2);    
 
 % euclideanDistance(hsvhist1, hsvhist2);
-
+result_mean = euclideanDistance(gaborMean1, gaborMean2);
+result_std = euclideanDistance(gaborStd1, gaborStd2);
+disp(result_std);
+if result_std < 0.05 && result_mean < 1
+         disp('similar images');
+         %result = 'similar';
+     else
+         disp('dissimilar images');
+         %result = 'dissimilar';
+end
 
 close all;

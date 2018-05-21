@@ -13,12 +13,13 @@ function gabor_example()
 % software at
 % http://matlabserver.cs.rug.nl
 % but are consistent with the formulae shown there
-lambda  = 8;
-theta   = 0;
-psi     = [0 pi/2];
-gamma   = 0.5;
-bw      = 1;
-N       = 8;
+lambda  = 8; %wavelength
+theta   = 0; %orientation
+psi     = [0 pi/2]; %phase shift
+gamma   = 0.5; %aspect ratio
+bw      = 1; %bandwidth or eefective width
+N       = 8; 
+
 img_in = im2double(imread('lena.jpg'));
 img_in(:,:,2:3) = [];   % discard redundant channels, it's gray anyway
 img_out = zeros(size(img_in,1), size(img_in,2), N);
