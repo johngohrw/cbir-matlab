@@ -70,7 +70,7 @@ end
 
 %normalize the histogram and return an 1x256 feature vector
 HSVhist = HSVhist(:);
-HSVhist = HSVhist/sum(HSVhist);
+%HSVhist = HSVhist/sum(HSVhist);
 
 %disp(HSVhist);
 clear;
