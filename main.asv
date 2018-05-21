@@ -44,6 +44,9 @@ for ii=1:numberOfFiles
     result_colour = euclideanDistance(hsvhistQuery, hsvhistData);
     histData_1(1, ii) = result_colour;
     file_names = [file_names; {currentfilename}]; 
+    if (currentfilename == 'image3.jpg')
+        disp(result_colour);
+    end
 end
 cd ..                           % change dir back to root folder
 
@@ -51,6 +54,7 @@ cd ..                           % change dir back to root folder
 %sort the lowest euclidean distance 
 %disp(file_names);
 [firstOrder, sortedOrder] = sort(histData_1);
+disp(firstOrder);
 new_fileresults = file_names(sortedOrder);
 firstOrder = firstOrder(:, 1:numberOfFiles/2);
 new_fileresults(numberOfFiles/2:end-1, :) = [];
