@@ -1,10 +1,10 @@
 function HSVhist = colourhistogram(I)
 
-[rows, cols, numOfBand] = size(I);
+[rows, cols, numOfBands] = size(I);
 
 %double checking the pixels of images;
-PixelsOfImage = rows*cols*numOfBands;
-disp(PixelsOfImage);
+% PixelsOfImage = rows*cols*numOfBands;
+% disp(PixelsOfImage);
 
 image = rgb2hsv(I);
 figure, imshow(image);
@@ -21,7 +21,7 @@ valueI = image(:,:,3);
 
 %equalization of the V value
 new_valueI = histeq(valueI);
-figure, imhist(I);
+% figure, imhist(I);
 
 %quantizing each of the HSV
 %USing 16x4x4
@@ -50,8 +50,8 @@ maxV = max(new_valueI(:));
 %     end
 % end
 
-for col = 1 : cols
-    for row = 1 : rows
+for row = 1 : rows
+    for col = 1 : cols
         hueBin = floor(hueI(row,col)/maxH * 15.9999)+ 1;
         saturBin = floor(saturI(row,col)/maxS * 3.9999)+ 1;
         valBin = floor(new_valueI(row,col)/maxV * 3.9999)+ 1;
@@ -72,6 +72,6 @@ end
 HSVhist = HSVhist(:);
 %HSVhist = HSVhist/sum(HSVhist);
 
-%disp(HSVhist);
-clear;
+% disp(HSVhist);
+% clear;
 end
