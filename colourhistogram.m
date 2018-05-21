@@ -13,11 +13,11 @@ image = rgb2hsv(I);
 hueI = image(:,:,1);
 saturI = image(:,:,2);
 valueI = image(:,:,3);
-%figure;
-%subplot(2,2,1);
-%figure, imshow(hueI);
-%figure, imshow(saturI);
-%figure, imshow(valueI);
+% figure;
+% subplot(2,2,1);
+% figure, imshow(hueI);
+% figure, imshow(saturI);
+% figure, imshow(valueI);
 
 %equalization of the V value
 new_valueI = histeq(valueI);
