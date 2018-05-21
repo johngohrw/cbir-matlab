@@ -7,7 +7,7 @@ function HSVhist = colourhistogram(I)
 % disp(PixelsOfImage);
 
 image = rgb2hsv(I);
-figure, imshow(image);
+%figure, imshow(image);
 
 %Split it tinto three of the HSV
 hueI = image(:,:,1);

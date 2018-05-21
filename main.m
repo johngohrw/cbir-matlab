@@ -2,6 +2,9 @@
 % threshold input from user
 euclideanThreshold = 5000;
 
+%Make an array
+
+
 % gabor filter arguments
 gamma = 1;
 psi = 0.1;
@@ -9,6 +12,19 @@ theta = 90;
 bw = 2.8;
 lambda = 3.5; 
 pi = 180;
+
+[filename, pathname] = uigetfile({'*.jpg;*.png;*.gif;*.bmp', 'All Image Files (*.jpg, *.png, *.gif, *.bmp)'; ...
+                '*.*',                   'All Files (*.*)'}, ...
+                'Pick an image file', 'MultiSelect', 'on');
+image = imread([pathname,filename]);
+     
+%imshow(image, 'Parent', app.UIAxes);
+
+hsvhistQuery = colourhistogram(image);
+
+%create an array of zeros
+histData_1 = zeros(1, numberOfFiles);
+file_names = {};
 
 % Get list of all JPG files in this directory
 % DIR returns as a structure array.  You will need to use () and . to get
@@ -21,12 +37,26 @@ for ii=1:numberOfFiles
     currentimage = imread(currentfilename);
 %   images{ii} = currentimage;  % i dont know what this line is for
     % do stuff here..
-    disp(ii)
+    % disp(ii)
     %imshow(currentimage);
+    hsvhistData = colourhistogram(currentimage);
+    %disp(hsvhistData)
+    result_colour = euclideanDistance(hsvhistQuery, hsvhistData);
+    histData_1(1, ii) = result_colour;
+    file_names = [file_names; {currentfilename}]; 
 end
 cd ..                           % change dir back to root folder
 
-image1 = imread('image2_3.jpg');
+%sort the lowest euclidean distance 
+%disp(file_names);
+[firstOrder, sortedOrder] = sort(histData_1);
+%disp(firstOrder);
+new_fileresults = file_names(sortedOrder);
+firstOrder = firstOrder(:, 1:numberOfFiles/2);
+new_fileresults(numberOfFiles/2:end-1, :) = [];
+
+
+image1 = imread('../images/');
 % gabor
 gabor1 = myGabor(image1, gamma, psi, theta, bw, lambda, pi);
 gaborMean1 = mean(gabor1);
@@ -35,7 +65,7 @@ gaborStd1 = std(gabor1);
 hsvhist1 = colourhistogram(image1);
 % disp(hsvhist1)
 
-image2 = imread('image2.jpg');
+image2 = imread('image3.jpg');
 % gabor
 gabor2 = myGabor(image2, gamma, psi, theta, bw, lambda, pi);
 gaborMean2 = mean(gabor2);
