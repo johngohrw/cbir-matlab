@@ -22,6 +22,9 @@ image = imread([pathname,filename]);
 
 hsvhistQuery = colourhistogram(image);
 
+gaborImg = myGabor(image, gamma, psi, theta, bw, lambda, pi);
+gaborImgMean = mean(gaborImg);
+
 %create an array of zeros
 histData_1 = zeros(1, numberOfFiles);
 file_names = {};
@@ -47,13 +50,49 @@ for ii=1:numberOfFiles
 end
 cd ..                           % change dir back to root folder
 
-
 %sort the lowest euclidean distance 
 %disp(file_names);
 [firstOrder, sortedOrder] = sort(histData_1);
 new_fileresults = file_names(sortedOrder);
 firstOrder = firstOrder(:, 1:numberOfFiles/2);
+%disp(firstOrder);
 new_fileresults(numberOfFiles/2:end-1, :) = [];
+
+
+%create an array of zeros
+mean_data1 = zeros(1, length(new_fileresults));
+second_file_names = {};
+
+% Get list of all JPG files in this directory
+% DIR returns as a structure array.  You will need to use () and . to get
+% the file names.
+cd images;                      % change dir to 'images'
+imagefiles = dir('*.jpg');      
+new_numberOfFiles = length(new_fileresults);  % Number of files found
+disp(new_numberOfFiles);
+for ii=1:new_numberOfFiles
+    currentfilename = imagefiles(ii).name;
+    currentimage = imread(currentfilename);
+%   images{ii} = currentimage;  % i dont know what this line is for
+    % do stuff here..
+    %disp(ii)
+    %imshow(currentimage);
+    gabor_data = myGabor(currentimage, gamma, psi, theta, bw, lambda, pi);
+    gaborMean = mean(gabor_data);
+    gaborStd = std(gaborStd);
+    result_mean = euclideanDistance(gaborImgMean, gaborMean);
+    result_std = euclideanDistance(gaborImgStd, gaborStd);
+    mean_data1(1, ii) = result_mean;
+    second_file_names = [second_file_names; {currentfilename}]; 
+end
+cd ..                           % change dir back to root folder
+
+%sort the lowest euclidean distance 
+%disp(file_names);
+[firstOrder, sortedOrder] = sort(mean_data1);
+new_second_fileresults = second_file_names(sortedOrder);
+firstOrder = firstOrder(:, 1:new_numberOfFiles/2);
+new_second_fileresults(new_numberOfFiles/2:end-1, :) = [];
 
 
 image1 = imread('image2_3.jpg');
