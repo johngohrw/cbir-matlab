@@ -1,3 +1,7 @@
+% Gabor filter
+% arguments:
+% Image,  Gamma,         Psi,    Theta,        Bandwidth,  Lambda,      Pi
+% Image, (aspect ratio),(phase),(orientation),(bandwidth),(wavelength),(pi)
 function gaborResult = myGabor(image, gamma, psi, theta, bw, lambda, pi)
 
     %convert it to gray scale 
