@@ -170,4 +170,9 @@ if indexToDetach ~= Inf
     fileNames = fileNames(1:indexToDetach-1,:);
 end
 
+disp('Processing done, check out these arrays in the workspace:');
+disp(' - similarityValues');
+disp(' - euclideanDistance');
+disp(' - fileNames');
+
 close all;
