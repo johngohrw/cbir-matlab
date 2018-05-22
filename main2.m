@@ -1,15 +1,3 @@
-
-% images are resized before any form of processing
-% desired resolution of the resized image
-resolution = [540; 540];
-
-% hardcoded query input image, 
-queryimg = imread('images/image1.jpg');
-queryimg = imresize(queryimg,[resolution(1,:) resolution(2,:)]); % resize query image
-
-% threshold input from user
-similarityThreshold = 0.5;
-
 % gabor filter arguments
 gamma = 1;
 psi = 0.1;
@@ -17,6 +5,23 @@ theta = 90;
 bw = 2.8;
 lambda = 3.5; 
 pi = 180;
+
+% images are resized before any form of processing
+% desired resolution of the resized image
+resolution = [540; 540];
+
+% Filtering Selections from user
+% 1 = color histogram, 2 = mean gabor, 3 = std gabor
+firstPassFilter = 1;
+secondPassFilter = 2;
+
+% Similarity threshold input from user
+firstPassSimilarityThreshold = 0.3;
+secondPassSimilarityThreshold = 0.4;
+
+% hardcoded query input image, 
+queryimg = imread('images/image1.jpg');
+queryimg = imresize(queryimg,[resolution(1,:) resolution(2,:)]); % resize query image
 
 % getting HSV color histogram for the query image
 colorHistQuery = colorHistogram(queryimg);
@@ -35,22 +40,21 @@ imagefiles = dir('*.jpg');           % get image file names in this folder
 cd(oldFolder)                        % change dir back to root folder
 numberOfFiles = length(imagefiles);  % Number of files found
 
-% Euclidean Value Distance Results
-% row 1: color histogram euclidean values
-% row 2: gabor filter mean euclidean values
-% row 3: gabor filter standard deviation euclidean values
+% Initialising arrays: 
+%       euclideanDistances - All Euclidean Value Distance Results
+%       similarityValues   - All Similarity values, min=0 max=1
+% row 1: color histogram values
+% row 2: gabor filter mean values
+% row 3: gabor filter standard deviation values
 euclideanDistances = zeros(numberOfFiles, 3);
-
-% Similarity values in percentage
-% row 1: color histogram similarity values
-% row 2: gabor filter mean similarity values
-% row 3: gabor filter standard deviation similarity values
 similarityValues = zeros(numberOfFiles, 3);
 
 % Initialising list of filenames
 fileNames = {};
 
-% loops each image file
+% loops each image file on the dataset
+% computes color histogram + gabor mean + gabor standard deviation features
+% calculates euclidean distances of each image with the query image
 for ii=1:numberOfFiles
     % get current file name, read current image
     currentfilename =  join([dirName,'/',imagefiles(ii).name]);
@@ -78,21 +82,13 @@ for ii=1:numberOfFiles
     euclideanDistances(ii, 3) = resultStd;
 end
 
-%%% FILTERING
-
-threshold = similarityThreshold;
-
-% 1 = color histogram, 2 = mean gabor, 3 = std gabor
-firstPassFilter = 3;
-secondPassFilter = 1;
-
-
-%%% FIRST PASS SORTING AND FILTERING
+%%% FIRST PASS SORTING
 
 % sort by euclidean distance of first pass filter, most similar images first
 [euclideanDistances, sortedIndexes] = sortrows(euclideanDistances,firstPassFilter);
 
 % sorting fileNames array accordingly 
+% (no need to sort SimilarityValues because it is still filled with zeroes)
 len = length(euclideanDistances);
 newFileNames = {};
 for ii = 1:len
@@ -100,8 +96,7 @@ for ii = 1:len
 end
 fileNames = newFileNames;
 
-firstPassSortedIndexes = sortedIndexes;
-firstPassFileNames = fileNames;
+%%% FIRST PASS SIMILARITY CALCULATION
 
 % getting highest EuclideanDist value as the benchmark for 0% similarity
 % a Euclidean Distance of 0 will be considered 100% similarity
@@ -115,7 +110,20 @@ for ii = 1:len
     similarityValues(ii,firstPassFilter) = result;
 end
 
-%%% SECOND PASS SORTING AND FILTERING
+%%% FIRST PASS THRESHOLD FILTERING
+
+% getting the detachment index to filter out dissimilar images.
+% this works because all arrays are sorted descendingly by similarity values.
+indexToDetach = filteringSimilarity(similarityValues, firstPassFilter, firstPassSimilarityThreshold);
+
+% splicing arrays from the back
+if indexToDetach ~= Inf
+    similarityValues = similarityValues(1:indexToDetach-1,:);
+    euclideanDistances = euclideanDistances(1:indexToDetach-1,:);
+    fileNames = fileNames(1:indexToDetach-1,:);
+end
+
+%%% SECOND PASS SORTING
 
 % sort by euclidean distance of second pass filter, most similar images first
 [euclideanDistances, sortedIndexes] = sortrows(euclideanDistances,secondPassFilter);
@@ -135,6 +143,8 @@ fileNames = newFileNames;
 similarityValues = newSimilarityValues;
 secondPassFileNames = fileNames;
 
+%%% SECOND PASS SIMILARITY CALCULATION
+
 % getting highest EuclideanDist value as the benchmark for 0% similarity
 % a Euclidean Distance of 0 will be considered 100% similarity
 maxDist = euclideanDistances(length(euclideanDistances), secondPassFilter);
@@ -147,6 +157,17 @@ for ii = 1:len
     similarityValues(ii,secondPassFilter) = result;
 end
 
-return;
+%%% SECOND PASS THRESHOLD FILTERING
+
+% getting the detachment index to filter out dissimilar images.
+% this works because all arrays are sorted descendingly by similarity values.
+indexToDetach = filteringSimilarity(similarityValues, secondPassFilter, secondPassSimilarityThreshold);
+
+% splicing arrays from the back
+if indexToDetach ~= Inf
+    similarityValues = similarityValues(1:indexToDetach-1,:);
+    euclideanDistances = euclideanDistances(1:indexToDetach-1,:);
+    fileNames = fileNames(1:indexToDetach-1,:);
+end
 
 close all;
