@@ -141,7 +141,6 @@ for ii = 1:len
 end
 fileNames = newFileNames;
 similarityValues = newSimilarityValues;
-secondPassFileNames = fileNames;
 
 %%% SECOND PASS SIMILARITY CALCULATION
 
