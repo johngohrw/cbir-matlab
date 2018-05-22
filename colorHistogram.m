@@ -1,4 +1,4 @@
-function HSVhist = colourhistogram(I)
+function HSVhist = colorHistogram(I)
 
 [rows, cols, numOfBands] = size(I);
 
