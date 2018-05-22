@@ -7,7 +7,7 @@ queryimg = imresize(queryimg,[resolution(1,:) resolution(2,:)]); % resize query 
 
 hsvHist_query = colourhistogram(queryimg);    % getting HSV histogram for query image
 
-cd colordataset;                              % change dir to 'images'
+cd colordataset;                        % change dir to 'images'
 imagefiles = dir('*.jpg');              % get list of all images in 'images' folder
 cd ..                                   % change dir back to root folder
 numberOfFiles = length(imagefiles);     % Number of images found
