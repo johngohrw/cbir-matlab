@@ -19,7 +19,7 @@ secondPassFilter = 2;
 firstPassSimilarityThreshold = 0.3;
 secondPassSimilarityThreshold = 0.4;
 
-% hardcoded query input image, 
+% query input image from user 
 queryimg = imread('images/image1.jpg');
 queryimg = imresize(queryimg,[resolution(1,:) resolution(2,:)]); % resize query image
 
