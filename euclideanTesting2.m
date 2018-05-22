@@ -26,7 +26,7 @@ for ii=1:numberOfFiles
     % computing euclidean distance between two histograms
     colorDist = euclideanDistance(hsvHist_query, hsvHist_current);
     
-    result = exp(100000/colorDist);
+    result = exp(colorDist/100000);
     disp(join([currentfilename,' ',num2str(result)]));
 end
 
