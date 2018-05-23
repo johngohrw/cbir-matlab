@@ -2,14 +2,14 @@ function HSVhist = colorHistogram(I)
 
 [rows, cols, numOfBands] = size(I);
 
+
 %double checking the pixels of images;
 % PixelsOfImage = rows*cols*numOfBands;
 % disp(PixelsOfImage);
-
 image = rgb2hsv(I);
 %figure, imshow(image);
 
-%Split it tinto three of the HSV
+%Split it into three of the HSV
 hueI = image(:,:,1);
 saturI = image(:,:,2);
 valueI = image(:,:,3);
@@ -74,4 +74,5 @@ HSVhist = HSVhist(:);
 
 % disp(HSVhist);
 % clear;
+
 end

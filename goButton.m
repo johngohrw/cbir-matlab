@@ -36,12 +36,21 @@ function [similarityValues, euclideanDistances, fileNames] = goButton(app)
         % get current file name, read current image
         currentfilename =  join([dirName,'/',imagefiles(ii).name]);
         currentimage = imread(currentfilename);
-
+       
         % update file names row
         fileNames = [fileNames; currentfilename];
 
         % resizing curr image to a standard resolution
         currentimage = imresize(currentimage,[app.resolution(1,:) app.resolution(2,:)]);
+        [rows, cols, numOfBands] = size(currentimage);
+
+        if numOfBands == 1
+            %cmap = colormap(gray);
+            disp(numOfBands);
+            currentimage = grs2rgb(currentimage);
+            imshow(currentimage);
+        end 
+    
 
         % Calculate euclidean distance with color histogram
         colorHistCurrent = colorHistogram(currentimage);
@@ -56,7 +65,7 @@ function [similarityValues, euclideanDistances, fileNames] = goButton(app)
         resultMean = euclideanDistance(gaborMeanQuery, currentGaborMean);
         resultStd = euclideanDistance(gaborStdQuery, currentGaborStd);
         euclideanDistances(ii, 2) = resultMean;
-        euclideanDistances(ii, 3) = resultStd;
+        euclideanDistances(ii, 3) = resultStd; 
     end
 
     %%% FIRST PASS SORTING

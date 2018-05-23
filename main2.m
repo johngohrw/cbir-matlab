@@ -65,6 +65,15 @@ for ii=1:numberOfFiles
     
     % resizing curr image to a standard resolution
     currentimage = imresize(currentimage,[resolution(1,:) resolution(2,:)]);
+    [rows, cols, numOfBands] = size(currentimage);
+
+    if numOfBands == 1
+        disp(numOfBands);
+        currentimage = grs2rgb(I);
+        imshow(currentimage);
+        [rows,cols,numOfC] = size(currentimage);
+        disp(numOfC);
+    end 
     
     % Calculate euclidean distance with color histogram
     colorHistCurrent = colorHistogram(currentimage);
